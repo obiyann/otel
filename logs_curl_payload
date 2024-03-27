@@ -1,0 +1,55 @@
+curl -XPOST -v "http://localhost:4318/v1/logs" -H "Content-Type: application/json" \
+--data-binary @- << EOF
+{
+  "resource_logs": [
+    {
+      "resource": {
+        "attributes": [
+          {
+            "key": "service.name",
+            "value": {
+              "stringValue": "test-with-curl"
+            }
+          },
+          {
+            "key": "deployment.environment",
+            "value": {
+              "stringValue": "test"
+            }
+          },
+          {
+            "key": "source",
+            "value": {
+              "stringValue": "my-source-test"
+            }
+          },
+          {
+            "key": "host.name",
+            "value": {
+              "stringValue": "my-test-host"
+            }
+          }
+        ]
+      },
+      "scope_logs": [
+        {
+          "scope": {
+            "name": "manual-test"
+          },
+          "log_records": [
+            {
+              "time": "1711141612",
+              "observed_time": "1711141612",
+              "name": "test",
+              "severity_text": "INFO",
+              "body": {
+                "stringValue": "Datadog was here"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+EOF
