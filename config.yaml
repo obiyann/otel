@@ -1,8 +1,10 @@
 receivers:
   otlp:
     protocols:
-      grpc:
       http:
+        endpoint: 0.0.0.0:4318
+      grpc:
+        endpoint: 0.0.0.0:4317
 
   hostmetrics:
     collection_interval: 10s
@@ -37,22 +39,27 @@ processors:
     send_batch_size: 100
     timeout: 10s
 
+connectors:
+  datadog/connector: {}
+
 exporters:
-  datadog:
+  datadog/exporter:
     api:
       key: <YOUR_DD_API_KEY>
 
 service:
   pipelines:
     metrics:
-      receivers: [hostmetrics]
+      receivers: [datadog/connector, hostmetrics]
       processors: [batch]
-      exporters: [datadog]
+      exporters: [datadog/exporter]
+
     traces:
       receivers: [otlp]
       processors: [batch]
-      exporters: [datadog]
+      exporters: [datadog/connector, datadog/exporter]
+
     logs:
-      receivers: [otlp, filelog]
+      receivers: [otlp]
       processors: [batch]
-      exporters: [datadog]
+      exporters: [datadog/exporter]
